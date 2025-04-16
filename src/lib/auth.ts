@@ -11,7 +11,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 export const sendMagicLink = async (email: string) => {
     window.localStorage.setItem("emailForSignIn", email);
     const actionCodeSettings = {
-        url: "http://localhost:3000/verification",
+        url: process.env.NEXT_PUBLIC_MAGIC_LINK_REDIRECT || "http://localhost:3000/verification",
         handleCodeInApp: true,
     };
 
