@@ -39,7 +39,7 @@ const LoginPage = () => {
             toast.success(
                 isRegister
                     ? "Enlace de registro enviado. Revisa tu correo. Puede que se envie a la bandeja de spam."
-                    : "Enlace de inicio de sesión enviado. Revisa tu correo."
+                    : "Enlace de inicio de sesión enviado. Revisa tu correo. Revisa tu correo. Puede que se envie a la bandeja de spam."
             )
         } catch (error) {
             console.error(error)
