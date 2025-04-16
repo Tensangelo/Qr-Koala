@@ -84,7 +84,7 @@ export default function Navbar() {
                         </Link>
                         <hr className="border-gray-300" />
                         <Link
-                            href="/"
+                            href="https://github.com/Tensangelo/Qr-Koala"
                             target="_blank"
                             onClick={handleMenuClick}
                             className="block px-5 py-2 hover:text-gray-600"
