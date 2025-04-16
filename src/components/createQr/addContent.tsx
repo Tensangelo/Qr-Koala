@@ -21,11 +21,13 @@ export const AddContent = ({ url, title, onChange, error }: AddContentProps) => 
 
     useEffect(() => {
         onChange("url", localUrl);
-    }, [localUrl, onChange]);
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [localUrl]);
 
     useEffect(() => {
         onChange("title", localTitle);
-    }, [localTitle, onChange]);
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [localTitle]);
 
     return (
         <>

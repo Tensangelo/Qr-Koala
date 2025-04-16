@@ -30,7 +30,8 @@ export const Customize = ({ design, onChange, isLoading = false }: CustomizeProp
             ...design,
             qrSize: qrSize,
         });
-    }, [qrSize, design, onChange])
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [qrSize])
 
     const handleToggleImage = (value: boolean) => {
         onChange({
