@@ -89,8 +89,8 @@ export const AccordionCustom = ({
                                     value={localName}
                                     onChange={(e) => setLocalName(e.target.value)}
                                     required
-                                    min={100}
-                                    max={250}
+                                    min={500}
+                                    max={1000}
                                     className={`appearance-none rounded-lg w-full h-[46px] py-3 px-3 text-base bg-white text-gray-900 leading-5 focus:outline-none focus:shadow-outline border
                                         ${
                                             error ? "border-red-500" : "border-gray-300"

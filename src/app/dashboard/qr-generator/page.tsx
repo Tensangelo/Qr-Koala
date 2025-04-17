@@ -29,24 +29,23 @@ const QrGenerator = () => {
     const [error, setError] = useState<string | null>(null); // Manejo de errores
     const [isLoading, setIsLoading] = useState(false); // Estado de carga
 
-    const [qrData, setQrData] = useState<Pick<QRCode, "name" | "data" | "design" | 'url' | 'title'>>({
+    const [qrData, setQrData] = useState<Pick<QRCode, "name" | "design" | 'value' | 'title'>>({
         name: "",
-        url: "",
+        value: "",
         title: "",
-        data: "",
         design: {
             foregroundColor: "#000000",
             backgroundColor: "#ffffff",
-            level: "L",
+            level: "M",
             image: false,
             imageSettings: {
-                src: "",
+                src: '/images/qr_koala_logo_large.png',
                 height: 24,
                 width: 24,
                 opacity: 1,
                 excavate: true
             },
-            qrSize: 250,
+            qrSize: 500,
         }
     });
 
@@ -69,7 +68,7 @@ const QrGenerator = () => {
             }
         } else if (step === 2) {
             // Validación para el paso 2
-            if (!qrData.url) {
+            if (!qrData.value) {
                 setError("Debe llenar todos los campos requeridos.");
                 return;
             }
@@ -132,7 +131,7 @@ const QrGenerator = () => {
             case 2:
                 return (
                     <AddContent
-                        url={qrData.url}
+                        url={qrData.value}
                         title={qrData.title}
                         onChange={(field, value) =>
                             setQrData((prev) => ({ ...prev, [field]: value }))
@@ -144,11 +143,8 @@ const QrGenerator = () => {
                 return (
                     <Customize
                         design={qrData.design}
-                        onChange={(updatedDesign) =>
-                            setQrData((prev) => ({
-                                ...prev,
-                                design: updatedDesign
-                            }))
+                        onChange={(design) =>
+                            setQrData((prev) => ({ ...prev, design }))
                         }
                         isLoading={isLoading}
                     />
@@ -165,7 +161,7 @@ const QrGenerator = () => {
                 currentStep={step}
                 onNext={handleNext}
                 onBack={handleBack}
-                preview={<QRPreview qr={qrData} />}
+                preview={<QRPreview qr={{ value: qrData.value, design: qrData.design }} />}
                 isLoading={isLoading}
             >
                 {error && <p className="text-red-500 text-sm mb-4">{error}</p>}

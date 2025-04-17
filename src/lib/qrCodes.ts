@@ -33,10 +33,9 @@ export type QRCode = {
     id?: string;
     uid: string;
     name: string;
-    url: string;
+    value: string;
     title: string;
     type: 'website';
-    data: string;
     isActive: boolean;
     createdAt: Timestamp;
     updatedAt: Timestamp;

@@ -11,7 +11,7 @@ import { PiQrCodeBold } from "react-icons/pi";
 interface AddContentProps {
     url: string;
     title: string;
-    onChange: (field: "title" | "url", value: string) => void;
+    onChange: (field: "title" | "value", value: string) => void;
     error: string;
 }
 
@@ -20,7 +20,7 @@ export const AddContent = ({ url, title, onChange, error }: AddContentProps) => 
     const [localTitle, setLocalTitle] = useState(title);
 
     useEffect(() => {
-        onChange("url", localUrl);
+        onChange("value", localUrl);
          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [localUrl]);
 

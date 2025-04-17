@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent, useEffect, useState } from "react";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Input } from "@components/ui/input";
 import { Switch } from "@components/ui/switch";
 import { Label } from "@components/ui/label";
@@ -15,6 +16,7 @@ import { GiResize } from "react-icons/gi";
 import { IoIosColorPalette } from "react-icons/io";
 import { VscSymbolColor } from "react-icons/vsc";
 import { LuImagePlus } from "react-icons/lu";
+import { toast } from "sonner";
 
 interface CustomizeProps {
     design: QRDesign;
@@ -23,16 +25,6 @@ interface CustomizeProps {
 }
 
 export const Customize = ({ design, onChange, isLoading = false }: CustomizeProps) => {
-    const [qrSize, setQrSize] = useState(design.qrSize);
-
-    useEffect(() => {
-        onChange({
-            ...design,
-            qrSize: qrSize,
-        });
-         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [qrSize])
-
     const handleToggleImage = (value: boolean) => {
         onChange({
             ...design,
@@ -69,13 +61,14 @@ export const Customize = ({ design, onChange, isLoading = false }: CustomizeProp
         });
     };
 
-    // const handleQRSize = (value: number) => {
-    //     if (value > 250) return; // Máximo tamaño del QR: 250 píxeles
-    //     onChange({
-    //         ...design,
-    //         qrSize: value,
-    //     });
-    // };
+    const handleQRSize = (value: string) => {
+        const parsed = parseInt(value, 10);
+        if (parsed > 1000 || isNaN(parsed)) return;
+        onChange({
+            ...design,
+            qrSize: parsed,
+        });
+    };
 
     const handleChangeColor = (field: "foregroundColor" | "backgroundColor", value: string) => {
         onChange({
@@ -139,11 +132,10 @@ export const Customize = ({ design, onChange, isLoading = false }: CustomizeProp
                                         <Input
                                             id="image-url"
                                             type="text"
-                                            placeholder="https://example.com/image.png"
-                                            value={design.imageSettings?.src ?? ""}
+                                            value='https://www.qrcode-koala.com/favicon.ico'
                                             onChange={handleImageLink}
                                             className={`appearance-none rounded-lg w-full h-[46px] py-3 px-3 text-base bg-white text-gray-900 leading-5 focus:outline-none focus:shadow-outline border`}
-                                            disabled={isLoading}
+                                            disabled={true}
                                         />
                                         <div className="flex gap-4 mt-6">
                                             <div>
@@ -200,14 +192,14 @@ export const Customize = ({ design, onChange, isLoading = false }: CustomizeProp
                 <AccordionCustom
                     idAccordion="qr-size"
                     icon={<GiResize size={30} />}
-                    title="Tamaño del QR (máx. 250px)"
+                    title="Tamaño del QR (máx. 1000px)"
                     description="Seleccion el tamaño del QR que deseas generar."
                     nameLabel="Tamaño del QR"
-                    placeholder="250"
+                    placeholder="500"
                     type="number"
                     required={false}
-                    localName={qrSize}
-                    setLocalName={(value: string) => setQrSize(parseInt(value, 10))}
+                    localName={design.qrSize.toString()}
+                    setLocalName={handleQRSize}
                 />
             </Card>
 

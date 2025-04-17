@@ -49,6 +49,8 @@ const LoginPage = () => {
         }
     }
 
+    console.log(process.env.NEXT_PUBLIC_MAGIC_LINK_REDIRECT)
+
     return (
         <div className="flex justify-center items-center w-full min-h-screen px-4 relative">
             <div className="absolute top-10 left-8 flex justify-start items-center h-fit">

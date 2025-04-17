@@ -4,17 +4,17 @@ import { QRCodeSVG } from "qrcode.react";
 import { QRCode } from "@libs/qrCodes";
 
 interface QRPreviewProps {
-    qr: Pick<QRCode, "data" | "design">;
+    qr: Pick<QRCode, "value" | "design">;
 }
 
 export const QRPreview = ({ qr }: QRPreviewProps) => {
-    const { data, design } = qr;
+    const { value, design } = qr;
 
     return (
-        <div className="flex flex-col items-center justify-center gap-2">
+        <div className="flex flex-col items-center justify-center gap-2 max-w-[250px]">
             <QRCodeSVG
-                key={`${data}-${design.level}-${design.foregroundColor}-${design.backgroundColor}-${design.qrSize}`}
-                value={data}
+                key={`${value}-${design.level}-${design.foregroundColor}-${design.backgroundColor}-${design.qrSize}`}
+                value={value}
                 size={design.qrSize}
                 bgColor={design.backgroundColor || "#ffffff"}
                 fgColor={design.foregroundColor || "#000000"}
@@ -32,6 +32,7 @@ export const QRPreview = ({ qr }: QRPreviewProps) => {
                         }
                         : undefined
                 }
+                className="w-full h-auto"
             />
         </div>
     );

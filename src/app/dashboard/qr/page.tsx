@@ -90,10 +90,16 @@ export default function QRDashboardPage() {
     const handleDownload = (qr: QRCode) => {
         const canvas = document.getElementById(`qr-${qr.id}`) as HTMLCanvasElement;
         if (!canvas) return toast.error("QR no encontrado.");
+
+        // Usa una imagen local desde la carpeta public
         const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
         const link = document.createElement("a");
         link.href = pngUrl;
-        link.download = `${qr.title}.png`;
+
+        // Usa un nombre por defecto si el título está vacío o es solo espacios
+        const title = qr.title?.trim() || "mi_codigo_qr";
+
+        link.download = `${title}.png`;
         link.click();
     };
 
@@ -137,88 +143,90 @@ export default function QRDashboardPage() {
             </div>
 
             <div className="flex justify-center items-center flex-col">
-                {filtered.map((qr) => (
-                    <div
-                        key={qr.id}
-                        className="rounded-xl border border-[#d1d5db] shadow p-5 space-y-3 bg-white my-4 w-full flex flex-col md:flex-row justify-start items-center"
-                    >
-                        <QRCodeCanvas
-                            id={`qr-${qr.id}`}
-                            value={qr.url}
-                            bgColor={qr.design.backgroundColor}
-                            fgColor={qr.design.foregroundColor}
-                            level={qr.design.level}
-                            imageSettings={qr.design.image ? qr.design.imageSettings : undefined}
-                            size={95}
-                            className="border border-gray-300 rounded-md p-4"
-                        />
-                        <div className="w-full md:w-[25rem] mb-0 truncate ml-5 md:border-r-2 md:border-r-[#d1d5db]">
-                            <p className="uppercase md:text-xs font-bold text-[#0069ff]">
-                                {qr.type}
-                            </p>
-                            <p className="block truncate font-bold text-black mt-4">
-                                {qr.title}
-                            </p>
-                            <p className="text-[10px] font-medium flex items-center gap-2 mt-2">
-                                Creado:{" "}
-                                {qr.createdAt.toDate().toLocaleDateString("es-ES")}
-                            </p>
-                            <p className="text-[10px] font-medium flex items-center gap-2">
-                                Modificado:{" "}
-                                {qr.updatedAt.toDate().toLocaleDateString("es-ES")}
-                            </p>
-                        </div>
-                        <div className="flex justify-start ml-10 w-full md:w-2xs md:border-r-2 md:border-r-[#d1d5db] h-[70px] mb-0">
-                            <article className="flex items-center overflow-hidden">
-                                <TfiWorld fontSize={12} />
-                                <Link
-                                    href={qr.url}
-                                    className="text-sm underline text-black ml-1 truncate max-w-[160px] md:max-w-[240px] lg:max-w-[320px] overflow-hidden whitespace-nowrap"
-                                    target="_blank"
+                {filtered.map((qr) => {
+                    return (
+                        <div
+                            key={qr.id}
+                            className="rounded-xl border border-[#d1d5db] shadow p-5 space-y-3 bg-white my-4 w-full flex flex-col md:flex-row justify-start items-center"
+                        >
+                            <QRCodeCanvas
+                                id={`qr-${qr.id}`}
+                                value={qr.value}
+                                bgColor={qr.design.backgroundColor}
+                                fgColor={qr.design.foregroundColor}
+                                level={qr.design.level}
+                                imageSettings={qr.design.image ? qr.design.imageSettings : undefined}
+                                size={qr.design.qrSize}
+                                className="border border-gray-300 rounded-md p-4 max-w-[95px] max-h-[95px]"
+                            />
+                            <div className="w-full md:w-[25rem] mb-0 truncate ml-5 md:border-r-2 md:border-r-[#d1d5db]">
+                                <p className="uppercase md:text-xs font-bold text-[#0069ff]">
+                                    {qr.type}
+                                </p>
+                                <p className="block truncate font-bold text-black mt-4">
+                                    {qr.title}
+                                </p>
+                                <p className="text-[10px] font-medium flex items-center gap-2 mt-2">
+                                    Creado:{" "}
+                                    {qr.createdAt.toDate().toLocaleDateString("es-ES")}
+                                </p>
+                                <p className="text-[10px] font-medium flex items-center gap-2">
+                                    Modificado:{" "}
+                                    {qr.updatedAt.toDate().toLocaleDateString("es-ES")}
+                                </p>
+                            </div>
+                            <div className="flex justify-start ml-10 w-full md:w-2xs md:border-r-2 md:border-r-[#d1d5db] h-[70px] mb-0">
+                                <article className="flex items-center overflow-hidden">
+                                    <TfiWorld fontSize={12} />
+                                    <Link
+                                        href={qr.value}
+                                        className="text-sm underline text-black ml-1 truncate max-w-[160px] md:max-w-[240px] lg:max-w-[320px] overflow-hidden whitespace-nowrap"
+                                        target="_blank"
+                                    >
+                                    {qr.value}
+                                    </Link>
+                                </article>
+                            </div>
+                            <div className="flex justify-start items-center flex-col w-full md:w-2xs md:border-r-2 md:border-r-[#d1d5db] h-[70px] mb-0">
+                                <p className="text-xs font-bold text-[#64748b]">Escaneos</p>
+                                <p className="text-center content-center w-[40px] h-[40px] bg-[#0069ff1a] rounded-full font-bold text-2xl mt-2">
+                                    {qr.scanCount}
+                                </p>
+                            </div>
+                            <div className="flex justify-around items-center w-full md:w-96 h-[70px]">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => handleDownload(qr)}
+                                    className="text-sm font-normal text-black border-black border-2 hover:bg-black hover:text-white rounded-sm px-4 h-[40px] cursor-pointer"
                                 >
-                                {qr.url}
-                                </Link>
-                            </article>
+                                    <BsDownload size={20} />
+                                    Descargar
+                                </Button>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild className="bg-black !rounded-[8px] text-white cursor-pointer">
+                                        <Button variant="ghost" className="hover:bg-gray-200 rounded-full p-2">
+                                            <MoreHorizontal />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-40">
+                                        <DropdownMenuItem onClick={() => router.push(`/dashboard/edit/${qr.id}`)}>
+                                            <FaRegEdit fontSize={20} />
+                                            Editar
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleToggleActive(qr)}>
+                                            <MdOutlineDesktopAccessDisabled fontSize={20} />
+                                            {qr.isActive ? "Desactivar" : "Activar"}
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleDelete(qr)} className="text-red-600">
+                                            <MdOutlineDeleteOutline fontSize={20} color="#e7000b" />
+                                            Eliminar
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
                         </div>
-                        <div className="flex justify-start items-center flex-col w-full md:w-2xs md:border-r-2 md:border-r-[#d1d5db] h-[70px] mb-0">
-                            <p className="text-xs font-bold text-[#64748b]">Escaneos</p>
-                            <p className="text-center content-center w-[40px] h-[40px] bg-[#0069ff1a] rounded-full font-bold text-2xl mt-2">
-                                {qr.scanCount}
-                            </p>
-                        </div>
-                        <div className="flex justify-around items-center w-full md:w-96 h-[70px]">
-                            <Button
-                                variant="outline"
-                                onClick={() => handleDownload(qr)}
-                                className="text-sm font-normal text-black border-black border-2 hover:bg-black hover:text-white rounded-sm px-4 h-[40px] cursor-pointer"
-                            >
-                                <BsDownload size={20} />
-                                Descargar
-                            </Button>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild className="bg-black !rounded-[8px] text-white cursor-pointer">
-                                    <Button variant="ghost" className="hover:bg-gray-200 rounded-full p-2">
-                                        <MoreHorizontal />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-40">
-                                    <DropdownMenuItem onClick={() => router.push(`/dashboard/edit/${qr.id}`)}>
-                                        <FaRegEdit fontSize={20} />
-                                        Editar
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleToggleActive(qr)}>
-                                        <MdOutlineDesktopAccessDisabled fontSize={20} />
-                                        {qr.isActive ? "Desactivar" : "Activar"}
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleDelete(qr)} className="text-red-600">
-                                        <MdOutlineDeleteOutline fontSize={20} color="#e7000b" />
-                                        Eliminar
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                    </div>
-                ))}
+                    )
+                })}
             </div>
 
             {!loading && filtered.length === 0 && (
